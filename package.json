@@ -8,7 +8,7 @@
     "url": "git://github.com/atenadru/aunnocreado.git"
   },
   "scripts": {
-    "dev": "nodemon run server",
+    "dev": "nodemon run ./src/erver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
