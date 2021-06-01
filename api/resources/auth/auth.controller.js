@@ -7,8 +7,15 @@ module.exports = function (injectedmysql) {
     throw new Error('Connexion no establecida')
   }
 
-  function login(req, res) {
-    res.json(JSON.stringify({ username: 'username', password: password }))
+  async function login(username, password) {
+    const data = await mysql.query(TABLA, { username: username })
+    console.log(data[0].email)
+    if (password === data[0].password) {
+      // Generar token;
+      return { ...data }
+    } else {
+      throw new Error('Informacion invalida')
+    }
   }
 
   return {
