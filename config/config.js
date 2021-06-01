@@ -4,12 +4,13 @@ module.exports = {
     PORT: process.env.PORT,
   },
   jwt: {
-    secret: process.env.JWT_SECRET,
+    SECRET: process.env.SECRET_KE,
+    REFRESH: process.env.SECRET_KE_TOKEN_REFRSH,
   },
   mysql: {
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASS,
-    database: process.env.MYSQL_DB,
+    HOST: process.env.MYSQL_HOST,
+    USER: process.env.MYSQL_USER,
+    PASSW: process.env.MYSQL_PASS,
+    DATABASE: process.env.MYSQL_DB,
   },
 }
