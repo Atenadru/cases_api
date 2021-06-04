@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const config = require('../../config/config')
+const config = require('../../config/next.config')
 
 function generateToken(payload) {
   return jwt.sign({ payload }, config.jwt.SECRET, { expiresIn: '1h' })

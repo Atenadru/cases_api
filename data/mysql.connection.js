@@ -1,5 +1,5 @@
 const mysql = require('mysql')
-const config = require('../config/config')
+const config = require('../config/next.config')
 
 const dbconf = Object.freeze({
   host: config.mysql.HOST,

@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 
 app.use('/api/auth/', authRouter)
-// app.use(errors)
+app.use(errors)
 const data = [{ nombre: 'yorman' }, { apellido: 'urdaneta' }]
 app.get('/', (req, res) => {
   res.json(data)
