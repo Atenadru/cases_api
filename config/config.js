@@ -4,8 +4,8 @@ module.exports = {
     PORT: process.env.PORT,
   },
   jwt: {
-    SECRET: process.env.SECRET_KE,
-    REFRESH: process.env.SECRET_KE_TOKEN_REFRSH,
+    SECRET: process.env.SECRET_KEY,
+    REFRESH: process.env.REFRESH_TOKEN,
   },
   mysql: {
     HOST: process.env.MYSQL_HOST,

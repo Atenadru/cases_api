@@ -1,13 +1,23 @@
 const express = require('express')
 const authController = require('./index')
 const authRouter = express.Router()
-const response = require('../utils/response')
+const response = require('../../utils/response')
 
-authRouter.get('/login', (req, res, next) => {
+authRouter.post('/login', (req, res, next) => {
   authController
-    .login(req.body.username, req.body.password)
+    .login({ username: req.body.username, password: req.body.password })
+    .then((token) => {
+      response.success(req, res, token, 200)
+    })
+    .catch(next)
+})
+
+authRouter.post('/singup', (req, res, next) => {
+  console.log(req.body.username, req.body.email, req.body.password)
+  authController
+    .singup(req.body.username, req.body.email, req.body.password)
     .then((data) => {
-      response.success(req, res, data[0].email, 200)
+      response.success(req, res, data, 200)
     })
     .catch(next)
 })

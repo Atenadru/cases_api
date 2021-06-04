@@ -1,12 +1,12 @@
 const mysql = require('mysql')
 const config = require('../config/config')
 
-const dbconf = {
+const dbconf = Object.freeze({
   host: config.mysql.HOST,
   user: config.mysql.USER,
   password: config.mysql.PASSW,
   database: config.mysql.DATABASE,
-}
+})
 
 let connection
 
@@ -34,11 +34,16 @@ function handleConnection() {
 
 handleConnection()
 
+/* 
+! mysql consultas abajo
+*/
+
 function list(table) {
   return new Promise((resolve, reject) => {
     connection.query(`SELECT * FROM ${table}`, (err, data) => {
       if (err) return reject(err)
       resolve(data)
+      connection.end()
     })
   })
 }
@@ -48,6 +53,7 @@ function get(table, id) {
     connection.query(`SELECT * FROM ${table} WHERE id='${id}'`, (err, data) => {
       if (err) return reject(err)
       resolve(data)
+      connection.end()
     })
   })
 }
@@ -57,6 +63,8 @@ function insert(table, data) {
     connection.query(`INSERT INTO ${table} SET ?`, data, (err, result) => {
       if (err) return reject(err)
       resolve(result)
+      console.log('RESULTADO', result)
+      connection.end()
     })
   })
 }
@@ -69,20 +77,10 @@ function update(table, data) {
       (err, result) => {
         if (err) return reject(err)
         resolve(result)
+        connection.end()
       }
     )
   })
-}
-
-function upsert(table, data) {
-  if (data.update === true) {
-    delete data.update
-    return update(table, data)
-  } else {
-    delete data.update
-    console.log(data)
-    return insert(table, data)
-  }
 }
 
 function query(table, query, join) {
@@ -108,6 +106,7 @@ function query(table, query, join) {
 module.exports = {
   list,
   get,
-  upsert,
+  insert,
+  update,
   query,
 }
