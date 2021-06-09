@@ -10,13 +10,38 @@ function generateRefreshToken(payload) {
   return jwt.sign({ payload }, config.jwt.REFRESH)
 }
 
-async function isMatcPassword(password, hashUser) {
-  const match = await bcrypt.compare(password, hashUser)
-  return match
+function verifyToken(token) {
+  return jwt.verify(token, config.jwt.REFRESH, (err, decode) => {
+    if (err) return err.message
+
+    return decode
+  })
 }
 
-function hashEncrypt(password) {
-  return bcrypt.hash(password, 5)
+async function isMatcPassword(password, hashUser) {
+  return await bcrypt.compare(password, hashUser)
+}
+
+async function hashEncrypt(password) {
+  return await bcrypt.hash(password, 5)
+}
+
+function getToken(auth) {
+  if (!auth) {
+    throw error('No viene token', 401)
+  }
+
+  if (auth.indexOf('Bearer ') === -1) {
+    throw error('Formato invalido', 401)
+  }
+
+  let token = auth.replace('Bearer ', '')
+  return token
+}
+
+function decodeHeader(refreshToken) {
+  const token = getToken(refreshToken)
+  return verifyToken(token)
 }
 
 module.exports = {
@@ -24,4 +49,6 @@ module.exports = {
   generateRefreshToken,
   isMatcPassword,
   hashEncrypt,
+  verifyToken,
+  decodeHeader,
 }

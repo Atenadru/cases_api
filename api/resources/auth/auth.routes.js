@@ -12,6 +12,8 @@ authRouter.post('/login', (req, res, next) => {
     .catch(next)
 })
 
+authRouter.post('/token', authController.token)
+
 authRouter.post('/singup', (req, res, next) => {
   console.log(req.body.username, req.body.email, req.body.password)
   authController
