@@ -1,17 +1,17 @@
 
-post http://localhost:3006/api/auth/login
+post http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
 "username":"elliott",
-"password":"12345d"
+"password":"12345"
 }
 
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjEwNjM5fQ.vSnSei2qLav9UdAx_sEUohjQevKHt9lleurU9ZZ3imk
 
 ###
 
-post http://localhost:3006/api/auth/token 
+post http://localhost:3000/api/auth/token 
 Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjEwNjM5fQ.vSnSei2qLav9UdAx_sEUohjQevKHt9lleurU9ZZ3imk
 
 ###
