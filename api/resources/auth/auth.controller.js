@@ -1,4 +1,5 @@
 const authUtil = require('../../utils/auth.util')
+const response = require('../../utils/response')
 const TABLA = 'auth'
 const TABLB = 'tokens_storage'
 
@@ -9,7 +10,11 @@ module.exports = function (injectedmysql) {
   }
 
   async function login({ username, password }) {
-    const data = await mysql.query(TABLA, { username: username })
+    const data = await mysql.queryRow({
+      table: TABLA,
+      filed: 'username',
+      condition: username,
+    })
 
     if (data === undefined || data === null) return null
 
@@ -35,32 +40,31 @@ module.exports = function (injectedmysql) {
     if (email) authData.email = email
     if (password) authData.password = await authUtil.hashEncrypt(password)
 
-    return mysql.insert(TABLA, authData)
+    return mysql.addRow(TABLA, authData)
   }
 
   async function token(req, res, next) {
-    const refreshToken = req.headers.authorization
+    const refreshHeaderToken = req.headers.authorization
+    if (refreshHeaderToken === null || refreshHeaderToken === undefined)
+      return res.sendStatus(401)
 
-    if (refreshToken === null) return res.sendStatus(401)
-    const decoded = authUtil.decodeHeader(refreshToken)
-
+    const decoded = authUtil.decodeHeader(refreshHeaderToken)
+    console.log(`[OUTPUT Decode: ] ${JSON.stringify(decoded)}`)
+    if (decoded == 'invalid signature') {
+      return res.status(403).json({ Message: 'Access Forbidden' })
+    }
     const id = parseInt(decoded.payload.id)
     mysql
-      .get(TABLB, id)
+      .queryRow({ table: TABLB, filed: 'user_fk', condition: id })
       .then((result) => {
-        if (refreshToken == result[0].refresh_token) {
-          res.status(200).json({ permitido: true })
-          next()
+        if (refreshHeaderToken == result[0].refresh_token) {
+          const newToken = authUtil.generateToken({ ...decoded })
+          res.status(200).json({ token: newToken })
         } else {
-          res.status(403).send('no permitido')
-          next()
+          res.status(403).json({ error: 'Access Forbidden' })
         }
       })
-      .catch((err) => {
-        res.status(500).json({
-          error: err.message,
-        })
-      })
+      .catch(next)
   }
 
   return {

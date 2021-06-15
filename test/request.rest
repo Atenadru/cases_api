@@ -1,26 +1,26 @@
 
-post http://localhost:3000/api/auth/login
+post http://localhost:3006/api/auth/login
 Content-Type: application/json
 
 {
 "username":"elliott",
-"password":"12345"
+"password":"12345d"
 }
 
 # eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjEwNjM5fQ.vSnSei2qLav9UdAx_sEUohjQevKHt9lleurU9ZZ3imk
 
 ###
 
-post http://localhost:3000/api/auth/token 
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjExODI3fQ.G9yBtW4eBlA6S11kAOCUb5x4IPIwjwackgUfqccDF8U 
+post http://localhost:3006/api/auth/token 
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjEwNjM5fQ.vSnSei2qLav9UdAx_sEUohjQevKHt9lleurU9ZZ3imk
 
 ###
 
-post http://localhost:3000/api/auth/singup
+post http://localhost:3006/api/auth/singup
 Content-Type: application/json
 
 {
-"username":"elliott",
-"email":"elliott@outlook.com",
+"username":"yorman",
+"email":"lenys@outlook.com",
 "password":"12345"
 }

@@ -2,76 +2,71 @@ const mysql = require('mysql')
 const config = require('../config/config')
 
 const dbconf = Object.freeze({
+  connectionLimit: 100,
   host: config.mysql.HOST,
   user: config.mysql.USER,
   password: config.mysql.PASSW,
   database: config.mysql.DATABASE,
+  debug: false,
 })
 
-let connection
-
-function handleConnection() {
-  connection = mysql.createConnection(dbconf)
-
-  connection.connect((err) => {
-    if (err) {
-      console.error('[db err]', err)
-      setTimeout(handleConnection, 2000)
-    } else {
-      console.log('DB Connected!')
-    }
-  })
-
-  connection.on('error', (err) => {
-    console.error('[db err]', err)
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleConnection()
-    } else {
-      throw err.message
-    }
-  })
-}
-
-handleConnection()
-
-/* 
-! mysql consultas abajo
-*/
+let pool = mysql.createPool(dbconf)
 
 function list(table) {
   return new Promise((resolve, reject) => {
-    connection.query(`SELECT * FROM ${table}`, (err, data) => {
-      if (err) return reject(err)
-      resolve(data)
-    })
-  })
-}
-
-function get(table, id) {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      `SELECT * FROM ${table} WHERE user_fk='${id}'`,
-      (err, data) => {
-        if (err) return reject(err)
-        resolve(data)
-      }
-    )
-  })
-}
-
-function insert(table, data) {
-  return new Promise((resolve, reject) => {
-    connection.query(`INSERT INTO ${table} SET ?`, data, (err, result) => {
+    pool.query(`SELECT * FROM ${table}`, (err, result) => {
       if (err) return reject(err)
       resolve(result)
-      console.log('RESULTADO', result)
     })
   })
 }
 
-function update(table, data) {
+function queryRow(data) {
   return new Promise((resolve, reject) => {
-    connection.query(
+    pool.getConnection((error, conn) => {
+      if (error) {
+        reject(error)
+      }
+
+      let selectQuery = 'SELECT * FROM ?? WHERE ?? = ?'
+      let query = mysql.format(selectQuery, [
+        data.table,
+        data.filed,
+        data.condition,
+      ])
+      conn.query(query, (err, result) => {
+        pool.on('acquire', function (connection) {
+          console.log('Connection %d acquired', connection.threadId)
+        })
+        conn.release()
+        pool.on('release', function (connection) {
+          console.log('Connection %d released', connection.threadId)
+        })
+        if (err) {
+          return reject(err)
+        }
+        resolve(result)
+      })
+    })
+  })
+}
+
+function addRow(table, data) {
+  let insertQuery = 'INSERT INTO ?? SET ?'
+  let query = mysql.format(insertQuery, [table, { ...data }])
+  pool.query(query, (err, response) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    // rows added
+    console.log(response.insertId)
+  })
+}
+
+function updateRow(table, data) {
+  return new Promise((resolve, reject) => {
+    pool.query(
       `UPDATE ${table} SET ? WHERE id=?`,
       [data, data.id],
       (err, result) => {
@@ -91,37 +86,21 @@ function query(table, query, join) {
   }
 
   return new Promise((resolve, reject) => {
-    connection.query(
+    pool.query(
       `SELECT * FROM ${table} ${joinQuery} WHERE ${table}.?`,
       query,
       (err, res) => {
-        if (err) {
-          reject(err.message)
-        }
+        if (err) return reject(err)
         resolve(res || null)
       }
     )
   })
 }
 
-function getRrefreshn() {
-  let id = parseInt(3)
-  let sql = `sp_get_refresh_token(${id})`
-
-  return connection.query(sql, (error, results, fields) => {
-    if (error) {
-      return console.error(error)
-    }
-
-    console.log(results[0])
-  })
-}
-
 module.exports = {
   list,
-  get,
-  insert,
-  update,
+  queryRow,
+  addRow,
+  updateRow,
   query,
-  getRrefreshn,
 }
