@@ -72,16 +72,10 @@ module.exports = function (injectedmysql) {
     const refreshHeaderToken = req.headers.authorization
     if (refreshHeaderToken === null || refreshHeaderToken === undefined)
       return res.sendStatus(401)
-    //todo 0) evaluar el decodeHeader method
-
-    //todo 1) hacer un filtro del token y quitar el Bearer
-    //todo 2) validar si el token ya expiro
-    //todo 3)si el token expiro borrarlo de tokenStorage
-
     const decoded = authUtil.decodeHeader(refreshHeaderToken)
     console.log(`[OUTPUT Decode: ] ${JSON.stringify(decoded)}`)
     if (decoded == 'invalid signature') {
-      return res.status(403).json({ Message: 'Access Forbidden' })
+      response.error(req, res, 'Access Forbidden', 403)
     }
     const id = parseInt(decoded.payload.id)
     mysql
@@ -90,9 +84,9 @@ module.exports = function (injectedmysql) {
         const cleanToken = authUtil.formatFilter(refreshHeaderToken)
         if (cleanToken == result[0].refresh_token) {
           const newToken = authUtil.generateToken({ ...decoded })
-          res.status(200).json({ token: newToken })
+          response.success(req, res, newToken, 200)
         } else {
-          res.status(403).json({ error: 'Access Forbidden 2' })
+          response.success(req, res, 'Access Forbidden', 403)
         }
       })
       .catch(next)

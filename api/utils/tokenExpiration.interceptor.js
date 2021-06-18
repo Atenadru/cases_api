@@ -1,4 +1,4 @@
-const checkTokenExpirationMiddleware = (store) => (next) => (action) => {
+const checkTokenExpiration = (store) => (next) => (action) => {
   const token =
     JSON.parse(localStorage.getItem('user')) &&
     JSON.parse(localStorage.getItem('user'))['token']
