@@ -26,7 +26,7 @@ async function hashEncrypt(password) {
   return await bcrypt.hash(password, 5)
 }
 
-function getToken(auth) {
+function formatFilter(auth) {
   if (!auth) {
     throw error('No viene token', 401)
   }
@@ -40,7 +40,7 @@ function getToken(auth) {
 }
 
 function decodeHeader(refreshToken) {
-  const token = getToken(refreshToken)
+  const token = formatFilter(refreshToken)
   return verifyToken(token)
 }
 
@@ -50,5 +50,6 @@ module.exports = {
   isMatcPassword,
   hashEncrypt,
   verifyToken,
+  formatFilter,
   decodeHeader,
 }

@@ -3,24 +3,24 @@ post http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-"username":"elliott",
+"username": "atenadru",
 "password":"12345"
 }
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjEwNjM5fQ.vSnSei2qLav9UdAx_sEUohjQevKHt9lleurU9ZZ3imk
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImF0ZW5hZHJ1In0sImlhdCI6MTYyNDAzOTg5MCwiZXhwIjoxNjI0MDQzNDkwfQ.lWPLkAw3Tjk9zhVM33zvKwyNwyJuo7KDmOUC2bAC6nY
 
 ###
 
 post http://localhost:3000/api/auth/token 
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjozLCJ1c2VybmFtZSI6ImVsbGlvdHQifSwiaWF0IjoxNjIzMjEwNjM5fQ.vSnSei2qLav9UdAx_sEUohjQevKHt9lleurU9ZZ3imk
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImF0ZW5hZHJ1In0sImlhdCI6MTYyNDAzOTg5MH0.ABp69fKg48UuJvv0MJdLakfhbsR5g4SHxvb3oslLlJo
 
 ###
 
-post http://localhost:3006/api/auth/singup
+post http://localhost:3000/api/auth/singup
 Content-Type: application/json
 
 {
-"username":"yorman",
-"email":"lenys@outlook.com",
+"username":"atenadru",
+"email":"yorman@outlook.com",
 "password":"12345"
 }

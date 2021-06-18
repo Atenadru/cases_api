@@ -35,11 +35,11 @@ function queryRow(data) {
         data.condition,
       ])
       conn.query(query, (err, result) => {
-        pool.on('acquire', function (connection) {
+        pool.once('acquire', function (connection) {
           console.log('Connection %d acquired', connection.threadId)
         })
         conn.release()
-        pool.on('release', function (connection) {
+        pool.once('release', function (connection) {
           console.log('Connection %d released', connection.threadId)
         })
         if (err) {
@@ -52,7 +52,21 @@ function queryRow(data) {
 }
 
 function addRow(table, data) {
-  let insertQuery = 'INSERT INTO ?? SET ?'
+  return new Promise((resolve, reject) => {
+    let insertQuery = 'INSERT INTO ?? SET ?'
+    let query = mysql.format(insertQuery, [table, { ...data }])
+    pool.query(query, (err, response) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      resolve(response.insertId)
+    })
+  })
+}
+
+function upsert(table, data) {
+  let insertQuery = 'INSERT INTO ?? SET ? ON DUPLICATE KEY UPDAT SET ?'
   let query = mysql.format(insertQuery, [table, { ...data }])
   pool.query(query, (err, response) => {
     if (err) {
@@ -101,6 +115,7 @@ module.exports = {
   list,
   queryRow,
   addRow,
+  upsert,
   updateRow,
   query,
 }
