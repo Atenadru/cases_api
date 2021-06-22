@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "nodemon run ./api/server.js",
+    "deploy":"serverless deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,11 +18,13 @@
   "dependencies": {
     "bcrypt": "5.0.1",
     "express": "4.17.1",
+    "aws-serverless-express": "^3.4.0",
     "jsonwebtoken": "8.5.1",
     "mysql": "2.18.1"
   },
   "devDependencies": {
-    "morgan": "^1.10.0",
-    "dotenv": "10.0.0"
+    "dotenv": "10.0.0",
+    "morgan": "1.10.0",
+    "serverless": "2.48.0"
   }
 }

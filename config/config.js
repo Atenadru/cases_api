@@ -1,7 +1,7 @@
 require('dotenv').config()
 module.exports = {
   api: {
-    PORT: process.env.PORT || 80 || 3000,
+    PORT: process.env.PORT,
   },
   jwt: {
     SECRET: process.env.SECRET_KEY,

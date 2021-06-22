@@ -7,10 +7,17 @@ function generateToken(payload) {
 }
 
 function generateRefreshToken(payload) {
-  return jwt.sign({ payload }, config.jwt.REFRESH)
+  return jwt.sign({ payload }, config.jwt.REFRESH, { expiresIn: '1d' })
 }
 
 function verifyToken(token) {
+  return jwt.verify(token, config.jwt.SECRET, (err, decode) => {
+    if (err) return err.message
+    return decode
+  })
+}
+
+function verifyTokenRefresh(token) {
   return jwt.verify(token, config.jwt.REFRESH, (err, decode) => {
     if (err) return err.message
 
@@ -41,7 +48,7 @@ function formatFilter(auth) {
 
 function decodeHeader(refreshToken) {
   const token = formatFilter(refreshToken)
-  return verifyToken(token)
+  return verifyTokenRefresh(token)
 }
 
 module.exports = {

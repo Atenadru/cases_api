@@ -91,6 +91,20 @@ function updateRow(table, data) {
   })
 }
 
+function deleteRow(table,field,condition) {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      `DELETE FROM ${table} WHERE ${field}=${condition}`,
+      (err, result) => {
+        if (err) return reject(err)
+        resolve(result.affectedRows)
+        console.log('Deleted Row(s):', results.affectedRows);
+      }
+    )
+  })
+}
+
+
 function query(table, query, join) {
   let joinQuery = ''
   if (join) {
@@ -117,5 +131,6 @@ module.exports = {
   addRow,
   upsert,
   updateRow,
+  deleteRow,
   query,
 }

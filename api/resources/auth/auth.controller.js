@@ -45,7 +45,7 @@ module.exports = function (injectedmysql) {
     }
   }
 
-  async function singup(req, res, next) {
+  async function singup(req, res, _next) {
     const username = req.body.username
     const email = req.body.email
     const password = req.body.password
@@ -70,31 +70,54 @@ module.exports = function (injectedmysql) {
 
   async function token(req, res, next) {
     const refreshHeaderToken = req.headers.authorization
-    if (refreshHeaderToken === null || refreshHeaderToken === undefined)
-      return res.sendStatus(401)
-    const decoded = authUtil.decodeHeader(refreshHeaderToken)
-    console.log(`[OUTPUT Decode: ] ${JSON.stringify(decoded)}`)
-    if (decoded == 'invalid signature') {
-      response.error(req, res, 'Access Forbidden', 403)
+    if (refreshHeaderToken === null || refreshHeaderToken === undefined) {
+     return response.error(req,res,'Access Denied',401)
     }
-    const id = parseInt(decoded.payload.id)
+    const cleanToken = authUtil.formatFilter(refreshHeaderToken)
     mysql
-      .queryRow({ table: TABLB, filed: 'user_fk', condition: id })
+      .queryRow({ table: TABLB, filed: 'refresh_token', condition: cleanToken })
       .then((result) => {
-        const cleanToken = authUtil.formatFilter(refreshHeaderToken)
-        if (cleanToken == result[0].refresh_token) {
+        if (Object.keys(result).length <= 0){
+          return response.error(req,res,'Access Forbidden',403)
+        }
+        console.log('[Resultado de QueryRow ]', result[0].refresh_token)
+
+
+        const decoded = authUtil.decodeHeader(refreshHeaderToken)
+        console.log(`[OUTPUT Decode: ] ${JSON.stringify(decoded)}`)
+    
+        if (decoded == 'invalid signature') {
+          return response.error(req,res,'Access Forbidden',403)
+        }
+
+        if (cleanToken === result[0].refresh_token) {
           const newToken = authUtil.generateToken({ ...decoded })
-          response.success(req, res, newToken, 200)
+          return response.success(req, res, newToken, 200)
         } else {
-          response.success(req, res, 'Access Forbidden', 403)
+         return response.error(req,res,'token invalido',403)
         }
       })
       .catch(next)
+  }
+
+  async function logout(req, res, next){
+    mysql
+    .deleteRow(TABLB,'access_token',token)
+    .then((result) => {
+      if (result == 1 ) {
+        response.success(req,res,`Deleted Row(s): ${result.affectedRows}`,204)
+      } else {
+        throw "we couldn\'t delete it"
+      }
+  
+    }).catch(next);
+   
   }
 
   return {
     login,
     singup,
     token,
+    logout
   }
 }

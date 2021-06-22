@@ -1,5 +1,5 @@
 
-post http://localhost:3000/api/auth/login
+post http://localhost:3002/api/auth/login
 Content-Type: application/json
 
 {
@@ -7,16 +7,16 @@ Content-Type: application/json
 "password":"12345"
 }
 
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImF0ZW5hZHJ1In0sImlhdCI6MTYyNDAzOTg5MCwiZXhwIjoxNjI0MDQzNDkwfQ.lWPLkAw3Tjk9zhVM33zvKwyNwyJuo7KDmOUC2bAC6nY
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImF0ZW5hZHJ1In0sImlhdCI6MTYyNDM5NTg1NywiZXhwIjoxNjI0Mzk5NDU3fQ.k9QhsJiB2Wn2969865VMHddLI_U2ENSAfwK7gTLq1dE
 
 ###
 
-post http://localhost:3000/api/auth/token 
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImF0ZW5hZHJ1In0sImlhdCI6MTYyNDAzOTg5MH0.ABp69fKg48UuJvv0MJdLakfhbsR5g4SHxvb3oslLlJo
+post http://localhost:3002/api/auth/token 
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJ1c2VybmFtZSI6ImF0ZW5hZHJ1In0sImlhdCI6MTYyNDM5NTg1NywiZXhwIjoxNjI0NDgyMjU3fQ.8_9VEUDsXKduDBgjxU-nf-FIQnosaFSeNuamwjt1uP4
 
 ###
 
-post http://localhost:3000/api/auth/singup
+post http://localhost:3002/api/auth/singup
 Content-Type: application/json
 
 {
@@ -24,3 +24,11 @@ Content-Type: application/json
 "email":"yorman@outlook.com",
 "password":"12345"
 }
+
+
+###
+
+POST  http://localhost:3002/api/auth/saludo
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7InBheWxvYWQiOnsiaWQiOjEsInVzZXJuYW1lIjoiYXRlbmFkcnUifSwiaWF0IjoxNjI0Mzk1ODU3LCJleHAiOjE2MjQ0ODIyNTd9LCJpYXQiOjE2MjQ0MDEzNjMsImV4cCI6MTYyNDQwNDk2M30.4kcXKhr4r8S5G39_tLNApuGZOrtEg8vczPn68FoECxE
+
+

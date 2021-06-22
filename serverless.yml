@@ -1,0 +1,20 @@
+service: yormanapi123407689
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  memorySize: 512
+  timeout: 5
+  stage: dev
+  region: us-east-1
+  logRetentionInDays: 14
+  versionFunctions: true
+
+# useDotenv: true
+
+functions:
+  api:
+    handler: lambda.handler
+    events:
+      - http: ANY {proxy+}
+      - http: ANY /
